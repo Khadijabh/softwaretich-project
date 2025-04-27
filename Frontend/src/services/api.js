@@ -1,13 +1,18 @@
-
-
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8081/api/auth';
+const api = axios.create({
+  baseURL: 'http://localhost:8081/api/auth', 
+});
 
-export const login = async (data) => {
-  return axios.post(`${API_URL}signin`, data);
-};
+// Intercepteur pour ajouter le token JWT aux requêtes
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
 
-export const register = async (data) => {
-  return axios.post(`${API_URL}signin`, data);
-};
+export default api;
