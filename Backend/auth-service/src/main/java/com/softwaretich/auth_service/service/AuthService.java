@@ -1,37 +1,52 @@
 package com.softwaretich.auth_service.service;
 
-import com.softwaretich.auth_service.model.User;
-import com.softwaretich.auth_service.repository.UserRepository;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.softwaretich.auth_service.model.User;
+import com.softwaretich.auth_service.repository.UserRepository;
+import com.softwaretich.auth_service.security.services.EncryptionService;
+
+import jakarta.transaction.Transactional; 
 
 @Service
 public class AuthService {
-    @Autowired
-    UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder encoder;
+    private UserRepository userRepository;
 
-    public User registerUser(String username, String email, String password, Set<String> roles) {
-        if (userRepository.existsByUsername(username)) {
-            throw new RuntimeException("Username is already taken!");
-        }
+    @Autowired
+    private EncryptionService encryptionService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Transactional
+    public User registerUser(String rawUsername, String email, String password, Set<String> roles) {
+        // 1. Vérification doublon
         if (userRepository.existsByEmail(email)) {
-            throw new RuntimeException("Email is already in use!");
+            throw new RuntimeException("Email déjà utilisé");
         }
 
+        // 2. Préparation de l'utilisateur
         User user = new User();
-        user.setUsername(username);
+        user.setUsername(encryptionService.encrypt(rawUsername));
+        user.setUsernameHash(encryptionService.hash(rawUsername));
         user.setEmail(email);
-        user.setPassword(encoder.encode(password));
-        user.setRoles(roles);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setEnabled(true);
+        user.setRoles(roles); // Utilise le Set de rôles passé en paramètre
 
+        // 3. Validation
+        if (user.getUsernameHash() == null) {
+            throw new IllegalStateException("username_hash cannot be null before saving");
+        }
+        
+        // 4. Sauvegarde
         return userRepository.save(user);
     }
 }
+

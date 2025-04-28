@@ -6,6 +6,7 @@ import com.softwaretich.auth_service.dto.response.JwtResponse;
 import com.softwaretich.auth_service.dto.response.MessageResponse;
 import com.softwaretich.auth_service.model.User;
 import com.softwaretich.auth_service.security.jwt.JwtUtils;
+import com.softwaretich.auth_service.security.services.EncryptionService;
 import com.softwaretich.auth_service.security.services.UserDetailsImpl;
 import com.softwaretich.auth_service.service.AuthService;
 import jakarta.validation.Valid;
@@ -32,6 +33,9 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
+    private EncryptionService encryptionService;
+    
+    @Autowired
     AuthService authService;
 
     @Autowired
@@ -42,40 +46,33 @@ public class AuthController {
         try {
             System.out.println("Attempting authentication for: " + loginRequest.getUsername());
             
+           
+			// Utilisez le HASH comme principal d'authentification
+            String usernameHash = encryptionService.hash(loginRequest.getUsername());
+            
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsername(), 
+                    usernameHash, // <- Changement crucial ici
                     loginRequest.getPassword()));
-            
-            System.out.println("Authentication successful for: " + loginRequest.getUsername());
             
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
             
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             List<String> roles = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
 
-            Long userId = null;
-            String email = null;
-            if (userDetails instanceof UserDetailsImpl) {
-                UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetails;
-                userId = userDetailsImpl.getId();
-                email = userDetailsImpl.getEmail();
-            }
-
             return ResponseEntity.ok(new JwtResponse(
                     jwt,
-                    userId,
-                    userDetails.getUsername(),
-                    email,
+                    userDetails.getId(),
+                    loginRequest.getUsername(), // Retourne le username original
+                    userDetails.getEmail(),
                     roles));
                     
         } catch (Exception e) {
-            System.err.println("Authentication failed: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
+            System.err.println("Authentication error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Authentication failed"));
         }
     }
 

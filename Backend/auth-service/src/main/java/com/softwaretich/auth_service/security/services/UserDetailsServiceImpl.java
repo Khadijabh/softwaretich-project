@@ -11,29 +11,34 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
+
+
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    
+
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private EncryptionService encryptionService;
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("Tentative de chargement de: " + username); 
+    public UserDetails loadUserByUsername(String usernameHash) throws UsernameNotFoundException { 
+        User user = userRepository.findByUsernameHash(usernameHash)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> {
-                System.err.println("UTILISATEUR NON TROUVÉ: " + username);
-                return new UsernameNotFoundException("User not found");
-            });
+        if (user.getUsernameHash() == null || !user.getUsernameHash().equals(usernameHash)) {
+            throw new UsernameNotFoundException("Invalid credentials");
+        }
 
-        System.out.println("Utilisateur trouvé: " + user.getUsername());
-        System.out.println("Roles: " + user.getRoles());
-
-        // Modifié: Retourner UserDetailsImpl au lieu de User
-        return UserDetailsImpl.build(user);
+        return UserDetailsImpl.build(user, encryptionService);
     }
 }
+   
+
+
+

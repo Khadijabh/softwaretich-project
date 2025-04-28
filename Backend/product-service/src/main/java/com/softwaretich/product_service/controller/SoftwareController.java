@@ -1,11 +1,15 @@
 package com.softwaretich.product_service.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.softwaretich.product_service.model.Software;
 import com.softwaretich.product_service.repository.SoftwareRepository;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,8 +25,32 @@ public class SoftwareController {
     }
 
     @PostMapping
-    public Software createSoftware(@RequestBody Software software) {
-        return softwareRepository.save(software);
+    public ResponseEntity<?> createSoftware(
+            @RequestParam("nom") String nom,
+            @RequestParam("details") String details,
+            @RequestParam("partner") String partner,
+            @RequestParam("categoryId") Long categoryId,
+            @RequestParam("brand") String brand,
+            @RequestParam("modelName") String modelName,
+            @RequestParam("specialFeat") String specialFeat,
+            @RequestParam("antennaType") String antennaType,
+            @RequestParam("photo") MultipartFile photoFile
+    ) throws IOException {
+
+        Software software = Software.builder()
+                .nom(nom)
+                .details(details)
+                .partner(partner)
+                .category_id(categoryId)
+                .brand(brand)
+                .model_name(modelName)
+                .special_feat(specialFeat)
+                .antenna_type(antennaType)
+                .photo(photoFile.getBytes())
+                .build();
+
+        softwareRepository.save(software);
+        return ResponseEntity.ok("Software ajouté avec succès !");
     }
 
     @GetMapping("/{id}")
