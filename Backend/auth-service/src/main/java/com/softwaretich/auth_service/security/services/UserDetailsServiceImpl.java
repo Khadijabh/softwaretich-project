@@ -26,15 +26,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private EncryptionService encryptionService;
 
     @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String usernameHash) throws UsernameNotFoundException { 
-        User user = userRepository.findByUsernameHash(usernameHash)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         
-        if (user.getUsernameHash() == null || !user.getUsernameHash().equals(usernameHash)) {
-            throw new UsernameNotFoundException("Invalid credentials");
-        }
-
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + email));
+        
         return UserDetailsImpl.build(user, encryptionService);
     }
 }

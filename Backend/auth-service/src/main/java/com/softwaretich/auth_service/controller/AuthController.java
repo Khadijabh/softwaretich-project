@@ -44,37 +44,33 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {
-            System.out.println("Attempting authentication for: " + loginRequest.getUsername());
-            
-           
-			// Utilisez le HASH comme principal d'authentification
-            String usernameHash = encryptionService.hash(loginRequest.getUsername());
-            
+            // Utilisation de l'email pour l'authentification
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    usernameHash, // <- Changement crucial ici
-                    loginRequest.getPassword()));
-            
+                    loginRequest.getEmail(), // Utiliser l'email au lieu du username
+                    loginRequest.getPassword())); // Le mot de passe est comparé directement
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Génération du JWT
             String jwt = jwtUtils.generateJwtToken(authentication);
-            
+
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             List<String> roles = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok(new JwtResponse(
-                    jwt,
-                    userDetails.getId(),
-                    loginRequest.getUsername(), // Retourne le username original
-                    userDetails.getEmail(),
-                    roles));
-                    
+                jwt,
+                userDetails.getId(),
+                userDetails.getEmail(),
+                roles));
         } catch (Exception e) {
-            System.err.println("Authentication error: " + e.getMessage());
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Authentication failed"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Erreur : Échec de l'authentification"));
         }
     }
+
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
