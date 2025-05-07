@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 @Data @NoArgsConstructor @AllArgsConstructor
 @SuperBuilder
 public class Hardware extends Product {
-    private double prix;
     private int nombre_vue;
     
     @Lob
