@@ -15,7 +15,9 @@ public abstract class Product {
     private Long id;
 
     private String nom;
-    private double prix;
+    private String details;
+    private String partner;
+    private Long category_id;
     
 
 

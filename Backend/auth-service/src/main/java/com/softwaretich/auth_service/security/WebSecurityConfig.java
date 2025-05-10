@@ -16,13 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class WebSecurityConfig {
@@ -57,31 +50,18 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(withDefaults()) // CORS configuration
-            .csrf(csrf -> csrf.disable()) // Désactivation du CSRF pour les API REST
-            .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler)) // Gestion des erreurs d'authentification
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Désactivation de la session
+            .csrf(csrf -> csrf.disable())
+            .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()  // Permet l'accès sans authentification aux routes d'authentification
-                .anyRequest().authenticated() // Toutes les autres requêtes nécessitent une authentification
+                .requestMatchers("/api/auth/**").permitAll()  // ✅ très important !
+                .anyRequest().authenticated()
             );
 
-        http.authenticationProvider(authenticationProvider()); // Utilisation du provider d'authentification
+        http.authenticationProvider(authenticationProvider());
 
-        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class); // Ajout du filtre d'authentification JWT
+        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Origines autorisées pour CORS
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Méthodes autorisées
-        configuration.setAllowedHeaders(List.of("*")); // Tous les en-têtes sont autorisés
-        configuration.setAllowCredentials(true); // Autorisation des cookies et autres informations sensibles
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Appliquer la configuration CORS à toutes les routes
-        return source;
     }
 }

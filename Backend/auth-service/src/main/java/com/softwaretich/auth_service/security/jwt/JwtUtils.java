@@ -29,14 +29,15 @@ public class JwtUtils {
     public String generateJwtToken(Authentication authentication) {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
-        // Construction du token avec les informations de l'utilisateur
         return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())  // Le nom d'utilisateur
-                .setIssuedAt(new Date())  // Date de création
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000))  // 1 jour
+                .setSubject(userPrincipal.getUsername()) // Va retourner "Nom Prénom"
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(SECRET_KEY)
                 .compact();
     }
+
+
 
     // Méthode pour extraire le nom d'utilisateur du token
     public String getUserNameFromJwtToken(String token) {

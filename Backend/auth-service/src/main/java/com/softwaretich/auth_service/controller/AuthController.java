@@ -44,15 +44,14 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {
-            // Utilisation de l'email pour l'authentification
+            System.out.println("Attempting authentication for: " + loginRequest.getEmail());
+
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    loginRequest.getEmail(), // Utiliser l'email au lieu du username
-                    loginRequest.getPassword())); // Le mot de passe est comparé directement
+                    loginRequest.getEmail(),
+                    loginRequest.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // Génération du JWT
             String jwt = jwtUtils.generateJwtToken(authentication);
 
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -61,15 +60,20 @@ public class AuthController {
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok(new JwtResponse(
-                jwt,
-                userDetails.getId(),
-                userDetails.getEmail(),
-                roles));
+                    jwt,
+                    userDetails.getId(),
+                    userDetails.getNom(),        // nouveau champ nom
+                    userDetails.getPrenom(),     // nouveau champ prenom
+                    userDetails.getEmail(),
+                    roles));
+
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Erreur : Échec de l'authentification"));
+            System.err.println("Authentication error: " + e.getMessage());
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Authentication failed"));
         }
     }
-
 
 
     @PostMapping("/signup")
@@ -82,8 +86,9 @@ public class AuthController {
         }
 
         User user = authService.registerUser(
-                signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
+                signUpRequest.getNom(),
+                signUpRequest.getPrenom(),
+                signUpRequest.getEmail(), 
                 signUpRequest.getPassword(),
                 roles);
 

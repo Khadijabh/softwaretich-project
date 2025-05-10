@@ -7,7 +7,11 @@ import jakarta.validation.constraints.Size;
 public class SignupRequest {
     @NotBlank
     @Size(min = 3, max = 20)
-    private String username;
+    private String nom;
+    
+    @NotBlank
+    @Size(min = 3, max = 20)
+    private String prenom;
 
     @NotBlank
     @Size(max = 50)
@@ -21,12 +25,20 @@ public class SignupRequest {
     private String role;
 
     // Getters and Setters
-    public String getUsername() {
-        return username;
+    public String getNom() {
+        return nom;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+    
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
     }
 
     public String getEmail() {

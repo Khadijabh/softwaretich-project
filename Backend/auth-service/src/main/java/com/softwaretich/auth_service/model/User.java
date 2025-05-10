@@ -30,12 +30,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "username_hash", nullable = false) 
-    private String usernameHash;  
-
-
-    @Column(unique = true, nullable = false)
-    private String username;
+    @Column(nullable = false)
+    private String nom;
+    
+    @Column(nullable = false)
+    private String prenom;
+    
+    
 
     @Column(nullable = false)
     private String password;

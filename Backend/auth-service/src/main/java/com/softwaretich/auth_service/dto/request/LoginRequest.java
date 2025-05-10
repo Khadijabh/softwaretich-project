@@ -1,18 +1,15 @@
 package com.softwaretich.auth_service.dto.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
+    @NotBlank
+    private String email;  // Utilise l'email pour l'authentification
 
-    @NotBlank(message = "L'email ne doit pas être vide")
-    @Email(message = "Format d'email invalide")
-    private String email;
-
-    @NotBlank(message = "Le mot de passe ne doit pas être vide")
+    @NotBlank
     private String password;
 
-    // Getters & Setters
+    // Getters et setters
     public String getEmail() {
         return email;
     }
