@@ -4,7 +4,6 @@ import NavBar from '../components/home/jsx/navbar';
 import Header from '../components/home/jsx/header';
 import Footer from "../components/Footer";
 
-<<<<<<< HEAD:Frontend-soft/src/pages/partners.jsx
 import at from "../assets/WHO/at.png";
 import C9 from "../assets/WHO/C9.png";
 import C10 from "../assets/WHO/C10.png";
@@ -17,21 +16,7 @@ import Sophos from "../assets/part/Sophos-Logo.png";
 import Fortinet from "../assets/part/Fortinet-Logo.svg";
 import crowdstrike from "../assets/part/crowdstrike-logo.png";
 import TrendMicro from "../assets/part/TrendMicro-Logo.png";
-||||||| parent of ddfb80c (frontend):src/pages/partners.jsx
-import at from "../assets/WHO/at.png";
-import C9 from "../assets/WHO/C9.png";
-import C10 from "../assets/WHO/C10.png";
-import C11 from "../assets/WHO/C11.png";
-import soo from "../assets/WHO/soo.png";
-import fort from "../assets/WHO/fort.png";
-import fire from "../assets/WHO/fire.png";
-import ext2 from "../assets/WHO/ext2.png";
-import Sophos from "../assets/part/Sophos-Logo.png";
-import Fortinet from "../assets/part/Fortinet-Logo.svg";
-import crowdstrike from "../assets/part/crowdstrike-logo.png";
-import kas1 from "../assets/WHO/kas1.png";
-import TrendMicro from "../assets/part/TrendMicro-Logo.png";
-=======
+
 import berger from "../assets/WHO/C9.png";
 import alten from "../assets/WHO/C10.png";
 import aws from "../assets/WHO/aws.png";
@@ -43,11 +28,7 @@ import assa from "../assets/WHO/assa.png";
 import engenius from "../assets/WHO/engenius.jpg";
 import lightera from "../assets/WHO/lightera.jpg";
 import cisco from "../assets/WHO/cisco.png";
-import fortinet from "../assets/WHO/fort.png";
-import sophos from "../assets/WHO/soo.png";
 import juniper from "../assets/WHO/juniper.png";
-import extreme from "../assets/WHO/ext2.png";
->>>>>>> ddfb80c (frontend):src/pages/partners.jsx
 
 const Partners = () => {
     const references = [
@@ -77,7 +58,7 @@ const Partners = () => {
         },
         {
             logo: hpe,
-            description: "Accueilli les élèves ingénieurs pour des Projets PFE de 6 Mois"
+            description: "BEAMTEL partenaire de HPE Aruba et Intégrateur de solution 5G Privée."
         },
         {
             logo: assa,
@@ -96,11 +77,11 @@ const Partners = () => {
             description: "BEAMTEL est partenaire officiel et Intégrateur de solutions de Cisco"
         },
         {
-            logo: fortinet,
-            description: "Reseller, Integrator & Authorized Partner"
+            logo: fort,
+            description: "Revendeur, Intégrateur & Partenaire Autorisé"
         },
         {
-            logo: sophos,
+            logo: soo,
             description: "BEAMTEL Intégrateur de solutions Cyber Sécurité de SOPHOS"
         },
         {
@@ -108,14 +89,12 @@ const Partners = () => {
             description: "Routing & Switching Provider Partnership"
         },
         {
-            logo: extreme,
+            logo: ext2,
             description: "BEAMTEL partenaire officiel"
-<<<<<<< HEAD:Frontend-soft/src/pages/partners.jsx
         },
         {
             logo: C9,
-            description: "Contrat 2 ans : 6 Consultants en Transformation Staire",
-            client: "Ministère de la Santé au Maroc"
+            description: "Contrat 2 ans : 6 Consultants en Transformation Staire\nClient : Ministère de la Santé au Maroc"
         },
         {
             logo: C10,
@@ -134,38 +113,20 @@ const Partners = () => {
             description: "5G Private Networks"
         },
         {
-            logo: fort,
-            description: "Revendeur, Intégrateur & Partenaire Autorisé"
-||||||| parent of ddfb80c (frontend):src/pages/partners.jsx
-        },
-
-        {
-            logo: kas1,
-            description: " BEAMTEL Intégrateur de solutions Cyber Sécurité de Kaspersky"
-        },
-
-
-        {
-            logo: C10,
-            description: "Contrat Cadre : Consultants en Ingénierie / Conseils / M.B.D. Labs"
+            logo: Sophos,
+            description: "Intégrateur de solutions SOPHOS"
         },
         {
-            logo: C11,
-            description: "Nous sommes Intégrateur de solutions de connectivités Nokia"
+            logo: Fortinet,
+            description: "Intégrateur certifié Fortinet"
         },
         {
-            logo: at,
-            description: "Nous sommes Intégrateur de la 5G privée de Athonet"
+            logo: TrendMicro,
+            description: "Solutions de sécurité TrendMicro"
         },
         {
-            logo: fire,
-            description: "Nous sommes Intégrateur des solutions 5G de Firecell"
-        },
-        {
-            logo: fort,
-            description: "Revendeur, Intégrateur & Partenaire Autorisé"
-=======
->>>>>>> ddfb80c (frontend):src/pages/partners.jsx
+            logo: crowdstrike,
+            description: "Partenaire officiel CrowdStrike"
         }
     ];
 
