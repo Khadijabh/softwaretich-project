@@ -1,0 +1,108 @@
+/* General layout */
+.Partners-page {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Container */
+.Partners-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Section Titles */
+.section-title, h1 {
+    text-align: center;
+    font-size: 2rem;
+    padding: 10px;
+    margin-bottom: 40px;
+    color: #222;
+}
+
+/* Grid for partners */
+.partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+/* Grid for references */
+.Partners-grid1 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+}
+
+/* Partner & Reference Cards */
+.partner-card,
+.reference-card {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.partner-card:hover,
+.reference-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.1);
+}
+
+/* Logos */
+.partner-logo img,
+.reference-logo img {
+    width: 140px;
+    height: auto;
+    max-height: 100px; /* Pour garder une hauteur raisonnable */
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+
+/* Partner name */
+.partner-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Reference content */
+.reference-content {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.reference-content p {
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+.client {
+    font-style: italic;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .partners-grid,
+    .Partners-grid1 {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .partner-logo img,
+    .reference-logo img {
+        width: 80px;
+    }
+
+    .section-title, h1 {
+        font-size: 1.5rem;
+    }
+}
