@@ -2,6 +2,8 @@ package com.softwaretich.contactus_service.controller;
 
 import com.softwaretich.contactus_service.entity.ContactMessage;
 import com.softwaretich.contactus_service.repository.ContactMessageRepository;
+
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +40,8 @@ public class ContactController {
         @NotBlank(message = "Le message est obligatoire")
         String message
     ) {}
-
+    
+    @Transactional
     @PostMapping("/send-email")
     public ResponseEntity<String> sendEmail(@Valid @RequestBody ContactRequest request) {
         try {
@@ -49,6 +54,7 @@ public class ContactController {
                 .email(request.email())
                 .subject(sanitizedSubject)
                 .message(sanitizedMessage)
+                .sentAt(LocalDateTime.now())
                 .build();
             repository.save(contactMessage);
 
@@ -74,14 +80,14 @@ public class ContactController {
     }
 
     @GetMapping("/message/{id}")
-    public ResponseEntity<?> getMessageById(@PathVariable Long id) {
+    public ResponseEntity<?> getMessageById(@PathVariable("id") Long id) {
         Optional<ContactMessage> message = repository.findById(id);
         return message.map(ResponseEntity::ok)
                       .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/message/{id}")
-    public ResponseEntity<String> deleteMessage(@PathVariable Long id) {
+    public ResponseEntity<String> deleteMessage(@PathVariable("id") Long id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
             return ResponseEntity.ok("Message ID: " + id + " supprimé.");
