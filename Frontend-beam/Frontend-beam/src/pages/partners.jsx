@@ -17,6 +17,20 @@ import Fortinet from "../assets/part/Fortinet-Logo.svg";
 import crowdstrike from "../assets/part/crowdstrike-logo.png";
 import TrendMicro from "../assets/part/TrendMicro-Logo.png";
 
+import at from "../assets/WHO/at.png";
+import C9 from "../assets/WHO/C9.png";
+import C10 from "../assets/WHO/C10.png";
+import C11 from "../assets/WHO/C11.png";
+import soo from "../assets/WHO/soo.png";
+import fort from "../assets/WHO/fort.png";
+import fire from "../assets/WHO/fire.png";
+import ext2 from "../assets/WHO/ext2.png";
+import Sophos from "../assets/part/Sophos-Logo.png";
+import Fortinet from "../assets/part/Fortinet-Logo.svg";
+import crowdstrike from "../assets/part/crowdstrike-logo.png";
+import kas1 from "../assets/WHO/kas1.png";
+import TrendMicro from "../assets/part/TrendMicro-Logo.png";
+
 import berger from "../assets/WHO/C9.png";
 import alten from "../assets/WHO/C10.png";
 import aws from "../assets/WHO/aws.png";
@@ -28,7 +42,11 @@ import assa from "../assets/WHO/assa.png";
 import engenius from "../assets/WHO/engenius.jpg";
 import lightera from "../assets/WHO/lightera.jpg";
 import cisco from "../assets/WHO/cisco.png";
+import fortinet from "../assets/WHO/fort.png";
+import sophos from "../assets/WHO/soo.png";
 import juniper from "../assets/WHO/juniper.png";
+import extreme from "../assets/WHO/ext2.png";
+
 
 const Partners = () => {
     const references = [
@@ -58,7 +76,7 @@ const Partners = () => {
         },
         {
             logo: hpe,
-            description: "BEAMTEL partenaire de HPE Aruba et Intégrateur de solution 5G Privée."
+            description: "Accueilli les élèves ingénieurs pour des Projets PFE de 6 Mois"
         },
         {
             logo: assa,
@@ -77,11 +95,11 @@ const Partners = () => {
             description: "BEAMTEL est partenaire officiel et Intégrateur de solutions de Cisco"
         },
         {
-            logo: fort,
-            description: "Revendeur, Intégrateur & Partenaire Autorisé"
+            logo: fortinet,
+            description: "Reseller, Integrator & Authorized Partner"
         },
         {
-            logo: soo,
+            logo: sophos,
             description: "BEAMTEL Intégrateur de solutions Cyber Sécurité de SOPHOS"
         },
         {
@@ -89,12 +107,14 @@ const Partners = () => {
             description: "Routing & Switching Provider Partnership"
         },
         {
-            logo: ext2,
+            logo: extreme,
             description: "BEAMTEL partenaire officiel"
+
         },
         {
             logo: C9,
-            description: "Contrat 2 ans : 6 Consultants en Transformation Staire\nClient : Ministère de la Santé au Maroc"
+            description: "Contrat 2 ans : 6 Consultants en Transformation Staire",
+            client: "Ministère de la Santé au Maroc"
         },
         {
             logo: C10,
@@ -113,20 +133,37 @@ const Partners = () => {
             description: "5G Private Networks"
         },
         {
-            logo: Sophos,
-            description: "Intégrateur de solutions SOPHOS"
+            logo: fort,
+            description: "Revendeur, Intégrateur & Partenaire Autorisé"
+
+        },
+
+        {
+            logo: kas1,
+            description: " BEAMTEL Intégrateur de solutions Cyber Sécurité de Kaspersky"
+        },
+
+
+        {
+            logo: C10,
+            description: "Contrat Cadre : Consultants en Ingénierie / Conseils / M.B.D. Labs"
         },
         {
-            logo: Fortinet,
-            description: "Intégrateur certifié Fortinet"
+            logo: C11,
+            description: "Nous sommes Intégrateur de solutions de connectivités Nokia"
         },
         {
-            logo: TrendMicro,
-            description: "Solutions de sécurité TrendMicro"
+            logo: at,
+            description: "Nous sommes Intégrateur de la 5G privée de Athonet"
         },
         {
-            logo: crowdstrike,
-            description: "Partenaire officiel CrowdStrike"
+            logo: fire,
+            description: "Nous sommes Intégrateur des solutions 5G de Firecell"
+        },
+        {
+            logo: fort,
+            description: "Revendeur, Intégrateur & Partenaire Autorisé"
+
         }
     ];
 
