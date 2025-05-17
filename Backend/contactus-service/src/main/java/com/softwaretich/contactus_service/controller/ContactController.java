@@ -1,58 +1,99 @@
 package com.softwaretich.contactus_service.controller;
 
+import com.softwaretich.contactus_service.entity.ContactMessage;
+import com.softwaretich.contactus_service.repository.ContactMessageRepository;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/contact")
+@RequiredArgsConstructor
 public class ContactController {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+    private final ContactMessageRepository repository;
+
+    public record ContactRequest(
+        @NotBlank(message = "Le nom est obligatoire")
+        String name,
+
+        @NotBlank(message = "L'email est obligatoire")
+        @Email(message = "L'email doit être valide")
+        String email,
+
+        @NotBlank(message = "Le sujet est obligatoire")
+        String subject,
+
+        @NotBlank(message = "Le message est obligatoire")
+        String message
+    ) {}
 
     @PostMapping("/send-email")
-    public String sendEmail(@RequestParam String name, @RequestParam String email, @RequestParam String message, Model model) {
-        // Validation des entrées
-        if (!isValidEmail(email)) {
-            model.addAttribute("error", "Email invalide.");
-            return "contact-form";
-        }
-
-        if (name.isEmpty() || message.isEmpty()) {
-            model.addAttribute("error", "Nom et message sont obligatoires.");
-            return "contact-form";
-        }
-
-        // Filtrage des messages (XSS, etc.)
-        message = sanitizeMessage(message);
-
-        // Envoi de l'email
+    public ResponseEntity<String> sendEmail(@Valid @RequestBody ContactRequest request) {
         try {
+            String sanitizedSubject = sanitizeMessage(request.subject());
+            String sanitizedMessage = sanitizeMessage(request.message());
+
+            // Enregistrement dans la base de données
+            ContactMessage contactMessage = ContactMessage.builder()
+                .name(request.name())
+                .email(request.email())
+                .subject(sanitizedSubject)
+                .message(sanitizedMessage)
+                .build();
+            repository.save(contactMessage);
+
+            // Envoi de l'email
             SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setTo("ton.email@gmail.com");
-            mailMessage.setSubject("Message de " + name);
-            mailMessage.setText("Message de " + name + " (" + email + "):\n\n" + message);
+            mailMessage.setTo("softwaretich01@gmail.com");
+            mailMessage.setSubject("[" + sanitizedSubject + "] - Message de " + request.name());
+            mailMessage.setText("Sujet : " + sanitizedSubject + "\n"
+                    + "De : " + request.name() + " (" + request.email() + ")\n\n"
+                    + sanitizedMessage);
+
             mailSender.send(mailMessage);
-            return "email-sent";
+            return ResponseEntity.ok("Email envoyé et message sauvegardé avec succès.");
         } catch (Exception e) {
-            model.addAttribute("error", "Erreur lors de l'envoi du message.");
-            return "contact-form";
+            return ResponseEntity.internalServerError()
+                    .body("Erreur lors de l'envoi de l'email: " + e.getMessage());
         }
     }
 
-    // Fonction pour valider un email
-    private boolean isValidEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        return email.matches(emailRegex);
+    @GetMapping("/all-messages")
+    public ResponseEntity<List<ContactMessage>> getAllMessages() {
+        return ResponseEntity.ok(repository.findAll());
     }
 
-    // Fonction pour filtrer le contenu du message (contre XSS, etc.)
+    @GetMapping("/message/{id}")
+    public ResponseEntity<?> getMessageById(@PathVariable Long id) {
+        Optional<ContactMessage> message = repository.findById(id);
+        return message.map(ResponseEntity::ok)
+                      .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/message/{id}")
+    public ResponseEntity<String> deleteMessage(@PathVariable Long id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return ResponseEntity.ok("Message ID: " + id + " supprimé.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     private String sanitizeMessage(String message) {
-        // Remplace les balises HTML et autres caractères spéciaux pour éviter l'injection XSS
-        return message.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;").replaceAll("\"", "&quot;");
+        return message.replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("&", "&amp;")
+                .replaceAll("\"", "&quot;");
     }
 }

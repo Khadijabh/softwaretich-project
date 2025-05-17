@@ -1,24 +1,44 @@
 package com.softwaretich.product_service.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "product_type")
-@Data @NoArgsConstructor @AllArgsConstructor 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @SuperBuilder
-public abstract class Product {
+public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nom;
     private String details;
-    private String partner;
-    private Long category_id;
-    
 
+    // Champ pour savoir si c'est un produit HARDWARE ou SOFTWARE
+    @Enumerated(EnumType.STRING)
+    private ProductType type;
 
+    // Champs communs et spécifiques
+    private Double prix;           // Pour hardware
+    private Integer nombre_vue;    // Pour hardware
+
+    private String brand;          // Pour software
+    private String model_name;
+    private String special_feat;
+    private String antenna_type;
+
+    @Lob
+    private byte[] photo;
 }
